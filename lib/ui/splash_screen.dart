@@ -66,7 +66,7 @@ class SplashScreen extends StatelessWidget {
   Widget _buildButtonStart() {
     return CustomElevatedButton(
       onPressed: () {},
-      text: "Get Started",
+      text: AppStrings.textButtonStart,
       backgroundColor: AppColors.colorButton,
       borderRadius: BorderRadius.circular(15).r,
       fontWeight: FontWeight.w500,
