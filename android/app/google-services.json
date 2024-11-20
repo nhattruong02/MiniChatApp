@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "620177460880",
+    "project_id": "fir-f2892",
+    "storage_bucket": "fir-f2892.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:620177460880:android:743189a676c6c74e3bd215",
+        "android_client_info": {
+          "package_name": "com.example.minichatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "620177460880-1pamktuq6u63dp4du93sdpara7k7i6cf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcMQmFPG4rAsGeLsYDC5mbVjvChKkAcnM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "620177460880-1pamktuq6u63dp4du93sdpara7k7i6cf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
