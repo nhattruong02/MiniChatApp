@@ -4,9 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:minichatapp/utils/asset_image_loader.dart';
 import 'package:minichatapp/utils/colors.dart';
 
-import '../utils/strings.dart';
-import '../widget/custom_elevated_button.dart';
-import '../widget/custom_text_form_field.dart';
+import '../../utils/strings.dart';
+import '../../widget/custom_elevated_button.dart';
+import '../../widget/custom_text_form_field.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
