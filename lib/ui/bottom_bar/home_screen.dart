@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:minichatapp/ui/tab_bar/tab_bar_call_screen.dart';
-import 'package:minichatapp/ui/tab_bar/tab_bar_chat_screen.dart';
-import 'package:minichatapp/ui/tab_bar/tab_bar_friend_screen.dart';
+import 'package:minichatapp/ui/tab_bar/tab_bar_call_home_screen.dart';
+import 'package:minichatapp/ui/tab_bar/tab_bar_chat_home_screen.dart';
+import 'package:minichatapp/ui/tab_bar/tab_bar_friend_home_screen.dart';
 import 'package:minichatapp/utils/asset_image_loader.dart';
 
 class HomeScreen extends StatefulWidget {

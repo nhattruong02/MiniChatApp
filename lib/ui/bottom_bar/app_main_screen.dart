@@ -36,7 +36,7 @@ class _AppMainScreenState extends State<AppMainScreen> {
             ),
             child: BottomNavigationBar(
                 currentIndex: selectedIndex,
-                backgroundColor: AppColors.colorBottomBar,
+                backgroundColor: AppColors.colorBGBar,
                 onTap: (value) {
                   setState(() {});
                   selectedIndex = value;
