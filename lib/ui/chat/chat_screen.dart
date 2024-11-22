@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,12 +13,31 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  final List<Map<String, dynamic>> items = [
+    {
+      'title': 'Athalia Putri',
+      'id': '1',
+    },
+    {
+      'title': 'Erlan Sadewa',
+      'id': '1',
+    },
+    {
+      'title': 'Erlan Sadewa',
+      'id': '1',
+    },
+    {
+      'title': 'Erlan Sadewa',
+      'id': '2',
+    }
+  ];
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Container(
-      color: Colors.white,
-      child: Column(
+        child: Scaffold(
+      backgroundColor: Colors.white,
+      body: Column(
           children: [_buildTopBar(), _buildListMessage(), _buildBottomBar()]),
     ));
   }
@@ -112,23 +130,154 @@ class _ChatScreenState extends State<ChatScreen> {
       padding: const EdgeInsets.only(right: 40).w,
       child: Row(
         children: [
-          SizedBox(
-              width: 25.w,
-              height: 18.h,
-              child: IconButton(
-                  onPressed: () {}, icon: Icon(CupertinoIcons.video_camera))),
-          23.horizontalSpace,
-          SizedBox(
-              width: 25.w,
-              height: 25.h,
-              child: IconButton(onPressed: () {}, icon: Icon(Icons.call))),
+          IconButton(
+              onPressed: () {},
+              icon: AssetImageLoader.loadAssetImage("video",
+                  fit: BoxFit.fill, height: 18, width: 25)),
+          7.horizontalSpace,
+          IconButton(
+              onPressed: () {},
+              icon: AssetImageLoader.loadAssetImage("call",
+                  fit: BoxFit.fill, height: 25, width: 25)),
         ],
       ),
     );
   }
 
   Widget _buildListMessage() {
-    return Expanded(child: Container());
+    return Expanded(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20).w,
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: items.length,
+          itemBuilder: (context, index) {
+            if (items[index]["id"] == "1") {
+              return _buildLeftMessage(items[index]["title"]);
+            } else {
+              return _buildRightMessage(items[index]["title"]);
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHorizontalLineAndLabel(String textTime) {
+    return Row(
+      children: [
+        const Expanded(
+          child: Divider(
+            indent: 42.0,
+            endIndent: 10.0,
+            thickness: 1,
+          ),
+        ),
+        Text(
+          textTime,
+          style: GoogleFonts.poppins(
+              color: AppColors.colorTextMessage,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w400),
+        ),
+        const Expanded(
+          child: Divider(
+            indent: 10.0,
+            endIndent: 42.0,
+            thickness: 1,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLeftMessage(String message) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 17).w,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: AppColors.colorButton, width: 2),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              message,
+              style: GoogleFonts.poppins(
+                  color: AppColors.colorTextMessage,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400),
+            ),
+          ),
+          Container(
+            width: 58.w,
+            height: 21.h,
+            margin: const EdgeInsets.symmetric(vertical: 8).w,
+            decoration: BoxDecoration(
+                color: AppColors.colorBGTimeMessage,
+                borderRadius: BorderRadius.circular(7)),
+            padding: const EdgeInsets.all(1).w,
+            child: Text(
+              "16:46",
+              style: GoogleFonts.poppins(
+                  color: AppColors.colorTextTime,
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w400),
+              textAlign: TextAlign.center,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRightMessage(String message) {
+    return Align(
+        alignment: Alignment.centerRight,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 11, vertical: 17).w,
+                decoration: BoxDecoration(
+                  color: AppColors.colorButton,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  message,
+                  style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400),
+                )),
+            Container(
+              width: 58.w,
+              height: 21.h,
+              margin: const EdgeInsets.symmetric(vertical: 8).w,
+              decoration: BoxDecoration(
+                  color: AppColors.colorBGTimeMessage,
+                  borderRadius: BorderRadius.circular(7)),
+              padding: const EdgeInsets.all(1).w,
+              child: Center(
+                child: Row(mainAxisSize: MainAxisSize.min, children: [
+                  Text(
+                    "16:50",
+                    style: GoogleFonts.poppins(
+                        color: AppColors.colorTextTime,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400),
+                  ),
+                  7.horizontalSpace,
+                  AssetImageLoader.loadAssetImage("home")
+                ]),
+              ),
+            )
+          ],
+        ));
   }
 
   Widget _buildBottomBar() {
@@ -145,12 +294,48 @@ class _ChatScreenState extends State<ChatScreen> {
             BoxShadow(
               color: Colors.black.withOpacity(0.5),
               blurRadius: 4,
-
               offset: const Offset(0, 4), // changes position of shadow
             ),
           ],
         ),
+        child: Row(children: [_buildTextField(), _buildRowIconBottom()]),
       ),
+    );
+  }
+
+  Widget _buildTextField() {
+    return Flexible(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 45).w,
+        child: TextField(
+          textAlign: TextAlign.start,
+          decoration: InputDecoration(
+            hintText: "Type here...",
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.symmetric(vertical: 4).w,
+            hintStyle: GoogleFonts.poppins(
+                color: Colors.grey,
+                fontSize: 17.sp,
+                fontWeight: FontWeight.w400),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRowIconBottom() {
+    return Row(
+      children: [
+        AssetImageLoader.loadAssetImage("camera",
+            width: 25, height: 25, fit: BoxFit.fill),
+        20.horizontalSpace,
+        AssetImageLoader.loadAssetImage("more",
+            width: 25, height: 25, fit: BoxFit.fill),
+        20.horizontalSpace,
+        AssetImageLoader.loadAssetImage("voice",
+            width: 25, height: 31, fit: BoxFit.fill),
+        20.horizontalSpace,
+      ],
     );
   }
 }

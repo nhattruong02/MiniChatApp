@@ -11,4 +11,7 @@ class AppColors {
   static const Color colorTextNameChat = Color(0xFF181818);
   static const Color colorTextChat = Color(0xFF5C5C5C);
   static const Color colorNumberMessage = Color(0xFFF5EDED);
+  static const Color colorTextMessage = Color(0xFF171717);
+  static const Color colorBGTimeMessage = Color(0xFFF1F1F1);
+  static const Color colorTextTime = Color(0xFF8C8C8C);
 }
