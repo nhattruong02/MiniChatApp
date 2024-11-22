@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:minichatapp/ui/chat/chat_screen.dart';
+import 'package:minichatapp/ui/register/register_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       builder: (_, child) {
         return const MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: ChatScreen(),
+          home: RegisterScreen(),
         );
       },
     );
