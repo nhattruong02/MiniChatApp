@@ -7,6 +7,7 @@ class AppStrings {
       "Happy to see you again, to use your\naccount please login first.";
   static const String textContentHelloRegister =
       "Happy to see you again, to use your\naccount please create account first.";
+  static const String textRegister = "New To [App Name]? Register Now";
   static const String textEmail = "Email Address";
   static const String textPassword = "Password";
   static const String textForgotPassword = "Forgot Password";

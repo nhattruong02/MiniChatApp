@@ -1,8 +1,11 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:minichatapp/provider/auth_provider.dart';
 import 'package:minichatapp/utils/asset_image_loader.dart';
 import 'package:minichatapp/utils/colors.dart';
+import 'package:provider/provider.dart';
 
 import '../../utils/strings.dart';
 import '../../widget/custom_elevated_button.dart';
@@ -16,8 +19,13 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     return SafeArea(
         child: Scaffold(
       backgroundColor: Colors.white,
@@ -27,13 +35,22 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           _buildIconBack(),
           _buildRowTitleContentAndImage(),
-          _buildTextFormFieldEmail(),
-          26.verticalSpace,
-          _buildTextFormFieldPassWord(),
+          Form(
+            key: _formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            child: Column(
+              children: [
+                _buildTextFormFieldEmail(),
+                _buildTextFormFieldPassWord(),
+              ],
+            ),
+          ),
           _buildTextForgotPassWord(),
-          50.verticalSpace,
-          _buildButtonLogin(),
-          68.verticalSpace,
+          30.verticalSpace,
+          _buildButtonLogin(authProvider, context),
+          10.verticalSpace,
+          _buildTextAndRegisterNow(),
+          58.verticalSpace,
           _buildTextAndDivider(),
           38.verticalSpace,
           _buildRowPlatform(),
@@ -98,14 +115,31 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildTextFormFieldEmail() {
-    return const CustomTextFormField(
+    return CustomTextFormField(
       textTitle: "Email Address",
+      controller: _emailController,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Email không được để trống';
+        }
+        if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+          return 'Email không hợp lệ';
+        }
+        return null;
+      },
     );
   }
 
   Widget _buildTextFormFieldPassWord() {
-    return const CustomTextFormField(
+    return CustomTextFormField(
       textTitle: "Password",
+      controller: _passwordController,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Password không được để trống';
+        }
+        return null;
+      },
     );
   }
 
@@ -124,9 +158,9 @@ class _LoginScreenState extends State<LoginScreen> {
             textAlign: TextAlign.start));
   }
 
-  Widget _buildButtonLogin() {
+  Widget _buildButtonLogin(AuthProvider authProvider, BuildContext context) {
     return CustomElevatedButton(
-      onPressed: () {},
+      onPressed: () => _onHandleLogin(authProvider, context),
       text: AppStrings.textButtonLogin,
       backgroundColor: AppColors.colorButton,
       borderRadius: BorderRadius.circular(15).r,
@@ -135,6 +169,35 @@ class _LoginScreenState extends State<LoginScreen> {
       minimumSizeHeight: 46,
       minimumSizeWith: 334,
       textColor: AppColors.textButton,
+    );
+  }
+
+  Widget _buildTextAndRegisterNow() {
+    return Center(
+      child: RichText(
+        text: TextSpan(
+          text: "New To [App Name]? ",
+          style: GoogleFonts.poppins(
+              color: Colors.black,
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w400),
+          children: <TextSpan>[
+            TextSpan(
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  Navigator.pushNamed(context, '/register');
+                },
+              text: "Register Now",
+              style: GoogleFonts.poppins(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.bold,
+                decoration: TextDecoration.underline,
+                color: Colors.blue,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -182,5 +245,15 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
+  }
+
+  /*
+  check form is valid or not
+  */
+  void _onHandleLogin(AuthProvider authProvider, BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      await authProvider.login(_emailController.text, _passwordController.text);
+      Navigator.pushNamed(context, '/home');
+    } else {}
   }
 }

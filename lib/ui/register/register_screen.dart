@@ -16,6 +16,10 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -96,20 +100,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildTextFormFieldName() {
-    return const CustomTextFormField(
+    return CustomTextFormField(
       textTitle: "Name",
+      controller: _nameController,
     );
   }
 
   Widget _buildTextFormFieldEmail() {
-    return const CustomTextFormField(
+    return CustomTextFormField(
       textTitle: "Email Address",
+      controller: _emailController,
     );
   }
 
   Widget _buildTextFormFieldPassWord() {
-    return const CustomTextFormField(
+    return CustomTextFormField(
       textTitle: "Password",
+      controller: _passwordController,
     );
   }
 
