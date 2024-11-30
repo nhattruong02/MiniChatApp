@@ -5,7 +5,7 @@ import 'package:minichatapp/ui/bottom_bar/home_screen.dart';
 import 'package:minichatapp/ui/bottom_bar/setting_screen.dart';
 import 'package:minichatapp/utils/colors.dart';
 
-import '../../utils/asset_image_loader.dart';
+import '../../utils/utilities.dart';
 
 class AppMainScreen extends StatefulWidget {
   const AppMainScreen({super.key});
@@ -43,13 +43,11 @@ class _AppMainScreenState extends State<AppMainScreen> {
                 },
                 items: [
                   BottomNavigationBarItem(
-                      icon: AssetImageLoader.loadAssetImage("home"), label: ""),
+                      icon: Utilities.loadAssetImage("home"), label: ""),
                   BottomNavigationBarItem(
-                      icon: AssetImageLoader.loadAssetImage("add_user"),
-                      label: ""),
+                      icon: Utilities.loadAssetImage("add_user"), label: ""),
                   BottomNavigationBarItem(
-                      icon: AssetImageLoader.loadAssetImage("setting"),
-                      label: ""),
+                      icon: Utilities.loadAssetImage("setting"), label: ""),
                 ]),
           ),
         ),

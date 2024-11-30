@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:minichatapp/provider/auth_provider.dart';
+import 'package:provider/provider.dart';
 
-import '../../utils/asset_image_loader.dart';
+import '../../main.dart';
 import '../../utils/colors.dart';
 import '../../utils/strings.dart';
-import '../../widget/custom_elevated_button.dart';
-import '../../widget/custom_text_form_field.dart';
+import '../../utils/utilities.dart';
+import '../../widgets/custom_elevated_button.dart';
+import '../../widgets/custom_text_form_field.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -16,12 +19,13 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     return SafeArea(
         child: Scaffold(
       backgroundColor: Colors.white,
@@ -31,13 +35,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
         children: [
           _buildIconBack(),
           _buildRowTitleContentAndImage(),
-          _buildTextFormFieldName(),
-          26.verticalSpace,
-          _buildTextFormFieldEmail(),
-          26.verticalSpace,
-          _buildTextFormFieldPassWord(),
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                _buildTextFormFieldName(),
+                26.verticalSpace,
+                _buildTextFormFieldEmail(),
+                26.verticalSpace,
+                _buildTextFormFieldPassWord(),
+              ],
+            ),
+          ),
           50.verticalSpace,
-          _buildButtonLogin(),
+          _buildButtonRegister(authProvider, context),
           68.verticalSpace,
         ],
       ),
@@ -45,20 +56,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildIconBack() {
-    return Container(
-      margin: const EdgeInsets.only(top: 31, left: 27).r,
-      width: 37.w,
-      height: 37.h,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(
-            color: Colors.black, width: 2.w), // Border for the circle
-      ),
-      child: Center(
-        child: Icon(
-          Icons.arrow_back,
-          color: Colors.black,
-          size: 28.sp,
+    return GestureDetector(
+      onTap: _onHandleBackToLogin,
+      child: Container(
+        margin: const EdgeInsets.only(top: 31, left: 27).r,
+        width: 37.w,
+        height: 37.h,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+              color: Colors.black, width: 2.w), // Border for the circle
+        ),
+        child: Center(
+          child: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+            size: 28.sp,
+          ),
         ),
       ),
     );
@@ -93,7 +107,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ],
         ),
         Flexible(
-            child: AssetImageLoader.loadAssetImage("dayflow_sitting",
+            child: Utilities.loadAssetImage("dayflow_sitting",
                 width: 188, height: 229, fit: BoxFit.fill))
       ],
     );
@@ -103,6 +117,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return CustomTextFormField(
       textTitle: "Name",
       controller: _nameController,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Name không được để trống';
+        }
+        return null;
+      },
     );
   }
 
@@ -110,6 +130,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return CustomTextFormField(
       textTitle: "Email Address",
       controller: _emailController,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Email không được để trống';
+        }
+        return null;
+      },
     );
   }
 
@@ -117,12 +143,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return CustomTextFormField(
       textTitle: "Password",
       controller: _passwordController,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Password không được để trống';
+        }
+        return null;
+      },
     );
   }
 
-  Widget _buildButtonLogin() {
+  Widget _buildButtonRegister(AuthProvider authProvider, BuildContext context) {
     return CustomElevatedButton(
-      onPressed: () {},
+      onPressed: () => _onHandleRegister(authProvider, context),
       text: AppStrings.textButtonRegister,
       backgroundColor: AppColors.colorButton,
       borderRadius: BorderRadius.circular(15).r,
@@ -132,5 +164,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
       minimumSizeWith: 334,
       textColor: AppColors.textButton,
     );
+  }
+
+  void _onHandleBackToLogin() {
+    navKey.currentState?.pop();
+  }
+
+  void _onHandleRegister(
+      AuthProvider authProvider, BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      await authProvider.register(
+        name: _nameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+    } else {}
   }
 }

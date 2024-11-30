@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:minichatapp/ui/tab_bar/tab_bar_call_home_screen.dart';
 import 'package:minichatapp/ui/tab_bar/tab_bar_chat_home_screen.dart';
 import 'package:minichatapp/ui/tab_bar/tab_bar_friend_home_screen.dart';
-import 'package:minichatapp/utils/asset_image_loader.dart';
+import 'package:minichatapp/utils/utilities.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10).w,
           color: const Color(0xFFF1F1F1)),
-      child: AssetImageLoader.loadAssetImage("scan"),
+      child: Utilities.loadAssetImage("scan"),
     );
   }
 
@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14).w,
                 borderSide: BorderSide.none),
-            prefixIcon: AssetImageLoader.loadAssetImage("search"),
+            prefixIcon: Utilities.loadAssetImage("search"),
           ),
         ),
       ),

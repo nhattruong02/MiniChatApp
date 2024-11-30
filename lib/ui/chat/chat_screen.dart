@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:minichatapp/model/message.dart';
+import 'package:minichatapp/provider/chat_provider.dart';
+import 'package:minichatapp/provider/message_provider.dart';
+import 'package:minichatapp/provider/user_provider.dart';
 import 'package:minichatapp/utils/colors.dart';
+import 'package:provider/provider.dart';
 
-import '../../utils/asset_image_loader.dart';
+import '../../provider/auth_provider.dart';
+import '../../utils/utilities.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -13,27 +19,16 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final List<Map<String, dynamic>> items = [
-    {
-      'title': 'Athalia Putri',
-      'id': '1',
-    },
-    {
-      'title': 'Erlan Sadewa',
-      'id': '1',
-    },
-    {
-      'title': 'Erlan Sadewa',
-      'id': '1',
-    },
-    {
-      'title': 'Erlan Sadewa',
-      'id': '2',
-    }
-  ];
+  late final MessageProvider messageProvider;
+  late String? idChatRoom;
+  late final UserProvider userProvider;
+  TextEditingController inputMessage = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    messageProvider = Provider.of<MessageProvider>(context);
+    idChatRoom = Provider.of<ChatProvider>(context).idChatRoom;
+    userProvider = Provider.of<UserProvider>(context, listen: false);
     return SafeArea(
         child: Scaffold(
       backgroundColor: Colors.white,
@@ -79,11 +74,16 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildIconBack() {
-    return Container(
-      padding: const EdgeInsets.only(left: 30).w,
-      child: Icon(
-        Icons.arrow_back,
-        size: 25.sp,
+    return GestureDetector(
+      onTap: () {
+        Navigator.pop(context);
+      },
+      child: Container(
+        padding: const EdgeInsets.only(left: 30).w,
+        child: Icon(
+          Icons.arrow_back,
+          size: 25.sp,
+        ),
       ),
     );
   }
@@ -95,33 +95,38 @@ class _ChatScreenState extends State<ChatScreen> {
           width: 50.w,
           height: 50.h,
           decoration: const BoxDecoration(shape: BoxShape.circle),
-          child: AssetImageLoader.loadAssetImage("splash")),
+          child: Utilities.loadAssetImage("splash")),
     );
   }
 
   Widget _buildColumNameAndStatus() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Text(
-          "Robert Fox",
-          style: GoogleFonts.poppins(
-              color: AppColors.colorTextNameChat,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 2).w,
-          child: Text(
-            "Online",
+    return SizedBox(
+      width: 100.w,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            userProvider.nameOtherUser.toString(),
+            overflow: TextOverflow.ellipsis,
+            softWrap: false,
             style: GoogleFonts.poppins(
-                color: AppColors.colorTextChat,
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w400),
+                color: AppColors.colorTextNameChat,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600),
           ),
-        )
-      ],
+          Padding(
+            padding: const EdgeInsets.only(left: 2).w,
+            child: Text(
+              "Online",
+              style: GoogleFonts.poppins(
+                  color: AppColors.colorTextChat,
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w400),
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -132,12 +137,12 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           IconButton(
               onPressed: () {},
-              icon: AssetImageLoader.loadAssetImage("video",
+              icon: Utilities.loadAssetImage("video",
                   fit: BoxFit.fill, height: 18, width: 25)),
           7.horizontalSpace,
           IconButton(
               onPressed: () {},
-              icon: AssetImageLoader.loadAssetImage("call",
+              icon: Utilities.loadAssetImage("call",
                   fit: BoxFit.fill, height: 25, width: 25)),
         ],
       ),
@@ -148,17 +153,34 @@ class _ChatScreenState extends State<ChatScreen> {
     return Expanded(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20).w,
-        child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            if (items[index]["id"] == "1") {
-              return _buildLeftMessage(items[index]["title"]);
-            } else {
-              return _buildRightMessage(items[index]["title"]);
-            }
-          },
-        ),
+        child: StreamBuilder<List<Message>>(
+            stream: messageProvider.getListMessage(idChatRoom!),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Container();
+              }
+              final messages = snapshot.data!;
+              return ListView.builder(
+                reverse: true,
+                shrinkWrap: true,
+                itemCount: messages.length,
+                itemBuilder: (context, index) {
+                  final message = messages[index];
+                  String senderId =
+                      Provider.of<AuthProvider>(context, listen: false)
+                          .currentUser!
+                          .uid;
+                  String time =
+                      Utilities.formatTimestampRealTime(message.timestamp);
+                  return message.senderId == senderId
+                      ? _buildRightMessage(message.content!, time)
+                      : _buildLeftMessage(message.content!, time);
+                },
+              );
+            }),
       ),
     );
   }
@@ -191,7 +213,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget _buildLeftMessage(String message) {
+  Widget _buildLeftMessage(String message, String time) {
     return Align(
       alignment: Alignment.centerLeft,
       child: Column(
@@ -221,7 +243,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 borderRadius: BorderRadius.circular(7)),
             padding: const EdgeInsets.all(1).w,
             child: Text(
-              "16:46",
+              time,
               style: GoogleFonts.poppins(
                   color: AppColors.colorTextTime,
                   fontSize: 12.sp,
@@ -234,7 +256,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget _buildRightMessage(String message) {
+  Widget _buildRightMessage(String message, String time) {
     return Align(
         alignment: Alignment.centerRight,
         child: Column(
@@ -263,17 +285,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   borderRadius: BorderRadius.circular(7)),
               padding: const EdgeInsets.all(1).w,
               child: Center(
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  Text(
-                    "16:50",
-                    style: GoogleFonts.poppins(
-                        color: AppColors.colorTextTime,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400),
-                  ),
-                  7.horizontalSpace,
-                  AssetImageLoader.loadAssetImage("home")
-                ]),
+                child: Text(
+                  time,
+                  style: GoogleFonts.poppins(
+                      color: AppColors.colorTextTime,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400),
+                ),
               ),
             )
           ],
@@ -308,7 +326,14 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 45).w,
         child: TextField(
+          controller: inputMessage,
           textAlign: TextAlign.start,
+          onSubmitted: (value) async {
+            String content = inputMessage.text;
+            await messageProvider.sendMessage(
+                content: content, idChatRoom: idChatRoom!);
+            inputMessage.clear();
+          },
           decoration: InputDecoration(
             hintText: "Type here...",
             border: InputBorder.none,
@@ -326,13 +351,13 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget _buildRowIconBottom() {
     return Row(
       children: [
-        AssetImageLoader.loadAssetImage("camera",
+        Utilities.loadAssetImage("camera",
             width: 25, height: 25, fit: BoxFit.fill),
         20.horizontalSpace,
-        AssetImageLoader.loadAssetImage("more",
+        Utilities.loadAssetImage("more",
             width: 25, height: 25, fit: BoxFit.fill),
         20.horizontalSpace,
-        AssetImageLoader.loadAssetImage("voice",
+        Utilities.loadAssetImage("voice",
             width: 25, height: 31, fit: BoxFit.fill),
         20.horizontalSpace,
       ],

@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:minichatapp/provider/auth_provider.dart';
-import 'package:minichatapp/utils/asset_image_loader.dart';
 import 'package:minichatapp/utils/colors.dart';
+import 'package:minichatapp/utils/utilities.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/strings.dart';
-import '../../widget/custom_elevated_button.dart';
-import '../../widget/custom_text_form_field.dart';
+import '../../widgets/custom_elevated_button.dart';
+import '../../widgets/custom_text_form_field.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -108,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ],
         ),
         Flexible(
-            child: AssetImageLoader.loadAssetImage("dayflow_sitting",
+            child: Utilities.loadAssetImage("dayflow_sitting",
                 width: 188, height: 229, fit: BoxFit.fill))
       ],
     );
@@ -236,11 +236,11 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          AssetImageLoader.loadAssetImage("google",
+          Utilities.loadAssetImage("google",
               width: 25, height: 25, fit: BoxFit.fill),
-          AssetImageLoader.loadAssetImage("apple-logo",
+          Utilities.loadAssetImage("apple-logo",
               width: 25, height: 25, fit: BoxFit.fill),
-          AssetImageLoader.loadAssetImage("facebook",
+          Utilities.loadAssetImage("facebook",
               width: 25, height: 25, fit: BoxFit.fill)
         ],
       ),
@@ -252,8 +252,8 @@ class _LoginScreenState extends State<LoginScreen> {
   */
   void _onHandleLogin(AuthProvider authProvider, BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      await authProvider.login(_emailController.text, _passwordController.text);
-      Navigator.pushNamed(context, '/home');
+      await authProvider.login(
+          email: _emailController.text, password: _passwordController.text);
     } else {}
   }
 }

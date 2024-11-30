@@ -1,75 +1,86 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../main.dart';
+import '../model/chatroom.dart';
 
 class ChatProvider with ChangeNotifier {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final SharedPreferences prefs;
+  ChatProvider(this.prefs);
+  CollectionReference refChatRoom =
+      FirebaseFirestore.instance.collection('chat_room');
+  String? _idChatRoom;
 
-  Stream<QuerySnapshot> getChats(String userId) {
-    return _firestore
-        .collection("chats")
-        .where('user', arrayContains: userId)
-        .snapshots();
+  String? get idChatRoom => _idChatRoom;
+
+  void setSelectedId(String idChatRoom) {
+    _idChatRoom = idChatRoom;
+    notifyListeners();
   }
 
-  Stream<QuerySnapshot> searchUsers(String query) {
-    return _firestore
-        .collection("users")
-        .where('email', isGreaterThanOrEqualTo: query)
-        .where('email', isLessThanOrEqualTo: query + '\uf8ff')
-        .snapshots();
+  Stream<List<ChatRoom>> getChatRoom() {
+    String? idUser = prefs.getString('userId');
+    return refChatRoom
+        .where('participants', arrayContains: idUser)
+        .snapshots()
+        .map((QuerySnapshot snapshot) {
+      return snapshot.docs.map((doc) {
+        return ChatRoom.fromJson(doc.data() as Map<String, dynamic>);
+      }).toList();
+    });
   }
 
-  Stream<void> sendMessage(
-      String chatId, String message, String receiverId) async* {
-    final currentUser = _auth.currentUser;
-    if (currentUser != null) {
-      await _firestore
-          .collection('chats')
-          .doc(chatId)
-          .collection('message')
-          .add({
-        'senderId': currentUser.uid,
-        'receiverId': receiverId,
-        'messageBody': message,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
-      await _firestore.collection('chats').doc(chatId).set({
-        'user': [currentUser.uid, receiverId],
-        'lastMessage': message,
-        'timestamp': FieldValue.serverTimestamp()
-      }, SetOptions(merge: true));
-    }
+  Future<String> getNameUserByChatRoom(List<String> participants) async {
+    String? currentUserId = prefs.getString('userId');
+    final otherUserId = participants.firstWhere((uid) => uid != currentUserId);
+
+    final userSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(otherUserId)
+        .get();
+    return userSnapshot['displayName'] ?? 'Unknown User';
   }
 
-  Future<String?> getChatRoom(String receiverId) async {
-    final currentUser = _auth.currentUser;
-    if (currentUser != null) {
-      final chatQuery = await _firestore
-          .collection('chats')
-          .where('users', arrayContains: currentUser.uid)
-          .get();
-      final chats = chatQuery.docs
-          .where((chat) => chat['users'].contains(receiverId))
-          .toList();
-      if (chats.isNotEmpty) {
-        return chats.first.id;
+  Future<void> createChatRoom(String idReceiver) async {
+    String? idSender = prefs.getString('userId');
+
+    // Query for an existing chat room with both participants
+    final querySnapshot =
+        await refChatRoom.where('participants', arrayContains: idSender).get();
+
+    // Check if any room exists with both participants
+    bool chatRoomExists = false;
+    String? existingChatRoomId;
+    for (var doc in querySnapshot.docs) {
+      final participants = doc['participants'] as List;
+      if (participants.contains(idReceiver)) {
+        chatRoomExists = true;
+        existingChatRoomId = doc.get('id');
+        break;
       }
     }
-    return null;
-  }
-
-  Future<String> createChatRoom(String receiverId) async {
-    final currentUser = _auth.currentUser;
-    if (currentUser != null) {
-      final chatRoom = await _firestore.collection('chats').add({
-        'users': [currentUser.uid, receiverId],
-        'lassMessage': '',
-        'timestamp': FieldValue.serverTimestamp(),
-      });
-      return chatRoom.id;
+    if (!chatRoomExists) {
+      // Create a new ChatRoom object
+      ChatRoom newChatRoom = ChatRoom(
+        id: refChatRoom.doc().id,
+        participants: [idSender!, idReceiver],
+        lastMessage: LastMessage(
+          content: '',
+          timestamp: Timestamp.now(),
+        ),
+        unreadCount: 0,
+      );
+      try {
+        await refChatRoom.add(newChatRoom.toJson());
+        _idChatRoom = refChatRoom.doc().id;
+        navKey.currentState?.pushNamed('/chat');
+      } catch (e) {
+        print('Error creating chat room: $e');
+      }
+    } else {
+      _idChatRoom = existingChatRoomId!;
+      navKey.currentState?.pushNamed('/chat');
     }
-    throw Exception('Current User is Null');
   }
 }

@@ -10,6 +10,8 @@ class TabBarCallScreen extends StatefulWidget {
 class _TabBarCallScreenState extends State<TabBarCallScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      color: Colors.white,
+    );
   }
 }

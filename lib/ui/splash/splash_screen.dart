@@ -4,8 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:minichatapp/utils/colors.dart';
 import 'package:minichatapp/utils/strings.dart';
 
-import '../../utils/asset_image_loader.dart';
-import '../../widget/custom_elevated_button.dart';
+import '../../utils/utilities.dart';
+import '../../widgets/custom_elevated_button.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -58,7 +58,7 @@ class SplashScreen extends StatelessWidget {
   Widget _buildImageSplash() {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 22.h),
-      child: AssetImageLoader.loadAssetImage("splash",
+      child: Utilities.loadAssetImage("splash",
           height: 350.h, width: 350.w, fit: BoxFit.fill),
     );
   }
