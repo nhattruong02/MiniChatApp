@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:minichatapp/main.dart';
 import 'package:minichatapp/provider/auth_provider.dart';
 import 'package:minichatapp/utils/colors.dart';
 import 'package:minichatapp/utils/utilities.dart';
@@ -60,20 +61,25 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildIconBack() {
-    return Container(
-      margin: const EdgeInsets.only(top: 31, left: 27).r,
-      width: 37.w,
-      height: 37.h,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(
-            color: Colors.black, width: 2.w), // Border for the circle
-      ),
-      child: Center(
-        child: Icon(
-          Icons.arrow_back,
-          color: Colors.black,
-          size: 28.sp,
+    return GestureDetector(
+      onTap: () {
+        navKey.currentState?.pop();
+      },
+      child: Container(
+        margin: const EdgeInsets.only(top: 31, left: 27).r,
+        width: 37.w,
+        height: 37.h,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+              color: Colors.black, width: 2.w), // Border for the circle
+        ),
+        child: Center(
+          child: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+            size: 28.sp,
+          ),
         ),
       ),
     );
@@ -185,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
             TextSpan(
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  Navigator.pushNamed(context, '/register');
+                  navKey.currentState?.pushNamed('/register');
                 },
               text: "Register Now",
               style: GoogleFonts.poppins(

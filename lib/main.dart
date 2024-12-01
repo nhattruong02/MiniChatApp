@@ -11,6 +11,7 @@ import 'package:minichatapp/ui/bottom_bar/app_main_screen.dart';
 import 'package:minichatapp/ui/chat/chat_screen.dart';
 import 'package:minichatapp/ui/login/login_screen.dart';
 import 'package:minichatapp/ui/register/register_screen.dart';
+import 'package:minichatapp/ui/splash/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -87,8 +88,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           return MaterialApp(
             navigatorKey: navKey,
             debugShowCheckedModeBanner: false,
-            home: const AuthenticationWrapper(),
+            home: const SplashScreen(),
             routes: {
+              '/splash': (context) => const SplashScreen(),
               '/login': (context) => const LoginScreen(),
               '/register': (context) => const RegisterScreen(),
               '/home': (context) => const AppMainScreen(),
