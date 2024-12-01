@@ -4,9 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:minichatapp/provider/user_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../constants/colors.dart';
 import '../../model/user.dart';
 import '../../provider/chat_provider.dart';
-import '../../utils/colors.dart';
 import '../../utils/utilities.dart';
 
 class TabBarFriendScreen extends StatefulWidget {

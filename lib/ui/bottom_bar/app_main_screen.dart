@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:minichatapp/ui/bottom_bar/add_user_screen.dart';
 import 'package:minichatapp/ui/bottom_bar/home_screen.dart';
 import 'package:minichatapp/ui/bottom_bar/setting_screen.dart';
-import 'package:minichatapp/utils/colors.dart';
 
+import '../../constants/colors.dart';
 import '../../utils/utilities.dart';
 
 class AppMainScreen extends StatefulWidget {

@@ -5,9 +5,9 @@ import 'package:minichatapp/model/message.dart';
 import 'package:minichatapp/provider/chat_provider.dart';
 import 'package:minichatapp/provider/message_provider.dart';
 import 'package:minichatapp/provider/user_provider.dart';
-import 'package:minichatapp/utils/colors.dart';
 import 'package:provider/provider.dart';
 
+import '../../constants/colors.dart';
 import '../../provider/auth_provider.dart';
 import '../../utils/utilities.dart';
 

@@ -4,9 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:minichatapp/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../constants/colors.dart';
+import '../../constants/strings.dart';
 import '../../main.dart';
-import '../../utils/colors.dart';
-import '../../utils/strings.dart';
 import '../../utils/utilities.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_form_field.dart';
@@ -149,6 +149,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         }
         return null;
       },
+      obscureText: true,
     );
   }
 

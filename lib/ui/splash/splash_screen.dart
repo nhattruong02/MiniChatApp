@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:minichatapp/utils/colors.dart';
-import 'package:minichatapp/utils/strings.dart';
+import 'package:minichatapp/constants/strings.dart';
 
+import '../../constants/colors.dart';
 import '../../main.dart';
 import '../../utils/utilities.dart';
 import '../../widgets/custom_elevated_button.dart';

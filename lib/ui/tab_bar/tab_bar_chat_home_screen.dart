@@ -3,10 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:minichatapp/model/chatroom.dart';
 import 'package:minichatapp/provider/user_provider.dart';
-import 'package:minichatapp/utils/colors.dart';
 import 'package:minichatapp/utils/utilities.dart';
 import 'package:provider/provider.dart';
 
+import '../../constants/colors.dart';
 import '../../provider/chat_provider.dart';
 
 class TabBarChatScreen extends StatefulWidget {

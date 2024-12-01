@@ -4,11 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:minichatapp/main.dart';
 import 'package:minichatapp/provider/auth_provider.dart';
-import 'package:minichatapp/utils/colors.dart';
 import 'package:minichatapp/utils/utilities.dart';
 import 'package:provider/provider.dart';
 
-import '../../utils/strings.dart';
+import '../../constants/colors.dart';
+import '../../constants/strings.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_form_field.dart';
 
@@ -146,6 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
         }
         return null;
       },
+      obscureText: true,
     );
   }
 

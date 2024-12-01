@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'; // Thêm thư viện ScreenUtil cho kích thước động
 import 'package:google_fonts/google_fonts.dart';
 
-import '../utils/colors.dart';
+import '../constants/colors.dart';
 
 class CustomTextFormField extends StatelessWidget {
   final String textTitle;
   final TextEditingController controller;
   final String? Function(String?)? validator;
+  final bool? obscureText;
 
-  const CustomTextFormField({
-    super.key,
-    required this.textTitle,
-    required this.controller,
-    this.validator,
-  });
+  const CustomTextFormField(
+      {super.key,
+      required this.textTitle,
+      required this.controller,
+      this.validator,
+      this.obscureText});
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +36,7 @@ class CustomTextFormField extends StatelessWidget {
           ),
           7.verticalSpace,
           TextFormField(
+            obscureText: obscureText ?? false,
             controller: controller,
             validator: validator,
             decoration: InputDecoration(
